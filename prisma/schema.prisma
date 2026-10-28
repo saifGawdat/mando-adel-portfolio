@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Editable link + copy for each of the three featured designs.
+/// The rest of the visual composition stays in content/site.ts.
+model WorkLink {
+  id         Int      @id @default(autoincrement())
+  slug       String   @unique
+  position   Int      @default(0)
+  title      String
+  titleLines String[]
+  subtitle   String
+  link       String
+  provider   String   @default("behance")
+  imageUrl   String?
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+}
