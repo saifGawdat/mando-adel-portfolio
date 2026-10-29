@@ -471,7 +471,7 @@ html.lenis body {
   width: calc(100% - var(--margin) * 2);
   max-width: 1400rem;
   transform: translate(-50%, -50%);
-  letter-spacing: -0.1em;
+  letter-spacing: 0;
   color: var(--cream);
 }
 
@@ -480,41 +480,18 @@ html.lenis body {
   white-space: nowrap;
 }
 
+/* each word is one glued run of groups — MANDO / ADEL — with no extra join;
+   the tracking and the jitter offsets do the internal spacing */
+.header-title .word {
+  display: flex;
+}
+
 .header-title .letter {
   display: inline-block;
 }
 
-/* the reference's per-letter optical jitter: a few letters sit off the baseline */
-.header-title .group:nth-child(1) .letter:nth-child(2) {
-  position: relative;
-  top: 0.05em;
-}
-
-.header-title .group:nth-child(2) .letter:nth-child(2) {
-  position: relative;
-  top: -0.02em;
-}
-
-.header-title .group:nth-child(3) .letter:nth-child(2) {
-  position: relative;
-  top: -0.05em;
-}
-
-.header-title .group:last-child .letter:nth-child(1),
-.header-title .group:last-child .letter:nth-child(2),
-.header-title .group:last-child .letter:nth-child(3) {
-  position: relative;
-  left: -0.3em;
-}
-
-.header-title .group:last-child .letter:nth-child(2) {
-  left: -0.4em;
-}
-
-.header-title .group:last-child .letter:nth-child(3) {
-  top: -0.05em;
-}
-
+/* the old lockup jitter (per-letter baseline nudges and the DEL tail pull) is
+   retired: the wordmark renders as normal text, one baseline per line */
 .header-subtitle {
   position: absolute;
   right: calc(var(--column) + var(--gap) + var(--margin));
@@ -547,6 +524,40 @@ html.lenis body {
 
 .header-mobile-content {
   display: none;
+}
+
+/* Desktop re-composition: the wordmark parks on the left edge, stacked
+   MANDO / ADEL, and the title column sits opposite it on the right edge.
+   Only desktop — the ≤1024px block re-lays the title out flat and centred,
+   and relies on the base position values. */
+@media (min-width: 1025px) {
+  .header-title {
+    left: var(--margin);
+    width: auto;
+    max-width: none;
+    transform: translateY(-50%);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-subtitle {
+    right: var(--margin);
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+    /* the single tagline line needs more than one grid column to breathe */
+    width: calc(var(--column) * 2 + var(--gap));
+  }
+
+  /* the staggered alignments only made sense inside the pinned bottom column;
+     against the right edge, all three lines hang off the same right rail */
+  .header-subtitle span:nth-child(1),
+  .header-subtitle span:nth-child(2),
+  .header-subtitle span:last-child {
+    margin: 0 0 0 auto;
+    text-align: right;
+  }
 }
 
 /* ---------------------------------------------------------------- about ---- */
@@ -683,21 +694,18 @@ html.lenis body {
   will-change: transform;
 }
 
-/* split: a plate that narrows to half the screen */
-.work--split .work-media {
-  top: 0;
-  width: 100%;
-  height: 100vh;
-}
-
+/* split: the design stretched full-screen behind the actual work; the plate
+   never narrows, it settles from an oversize zoom (individual `scale`, so the
+   parallax translate keeps composing) */
 .work--split .work-media-image {
-  width: 100%;
   filter: brightness(0.42) saturate(0.92) contrast(1.04);
-  transition: width 2.4s var(--ease) 0.25s;
+  opacity: 0.2;
+  scale: 1.3;
+  transition: scale 2.4s var(--ease) 0.25s;
 }
 
 .work--split.is-in .work-media-image {
-  width: 50%;
+  scale: 1;
 }
 
 /* cover: full-bleed plate, wiped up */
@@ -758,12 +766,14 @@ html.lenis body {
       rgba(0, 0, 0, 0) 38%,
       rgba(0, 0, 0, 0.6) 100%
     ),
+    /* mirrored for the left-rail card: black plate edge under the card,
+       deepening to the right rail where the meta and the title sit */
     linear-gradient(
       90deg,
       #000 0%,
-      rgba(0, 0, 0, 0.2) 32%,
-      rgba(0, 0, 0, 0.08) 64%,
-      rgba(0, 0, 0, 0.35) 100%
+      rgba(0, 0, 0, 0.3) 32%,
+      rgba(0, 0, 0, 0.12) 64%,
+      rgba(0, 0, 0, 0.55) 100%
     );
 }
 
@@ -845,25 +855,33 @@ html.lenis body {
   margin-top: 70rem;
 }
 
-/* panel layout (reference: member three) */
+/* panel layout — DREAM: the card parks on the left rail; meta stacks over the
+   plate above the title on the right rail */
 .work--panel .work-card {
   position: relative;
   z-index: 2;
   width: 540rem;
   aspect-ratio: 540 / 670;
+  /* the section centres its flow children, but the card owns the left rail:
+     the auto margin absorbs all free space and pins it against the rail */
+  margin-left: 90rem;
+  margin-right: auto;
 }
 
 .work--panel .work-left {
   position: absolute;
-  left: 90rem;
-  bottom: 33vh;
+  left: auto;
+  right: 90rem;
+  bottom: 350rem;
   z-index: 3;
-  width: 100%;
-  max-width: 330rem;
+  width: auto;
+  max-width: none;
 }
 
+/* back on the right rail the meta hangs off the same edge as the title */
 .work--panel .work-left .work-meta {
-  align-items: flex-start;
+  align-items: flex-end;
+  text-align: right;
 }
 
 .work--panel .work-right {
@@ -1626,7 +1644,7 @@ html.lenis body {
     max-width: none;
     padding: 0 var(--margin);
     font-size: 56px;
-    letter-spacing: -0.08em;
+    letter-spacing: 0;
   }
 
   .header-title .group:not(:last-child) {
@@ -1634,13 +1652,13 @@ html.lenis body {
   }
 
   /* the word break survives the flat mobile lockup */
-  .header-title .group:nth-child(2) {
-    margin-right: 0.32em;
+  .header-title .word + .word {
+    margin-left: 0.32em;
   }
 
-  .header-title .group:last-child .letter:nth-child(1),
-  .header-title .group:last-child .letter:nth-child(2),
-  .header-title .group:last-child .letter:nth-child(3) {
+  .header-title .word:last-child .group:last-child .letter:nth-child(1),
+  .header-title .word:last-child .group:last-child .letter:nth-child(2),
+  .header-title .word:last-child .group:last-child .letter:nth-child(3) {
     left: 0;
   }
 

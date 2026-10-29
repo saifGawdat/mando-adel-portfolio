@@ -39,15 +39,23 @@ export const site = {
   // TODO: replace with his real address before launch.
   email: "hello@mandoadel.com",
 
-  /** hero wordmark, broken into four groups and justified edge to edge like IN / HE / RI / TED */
+  /** hero wordmark: two glued words pinned to the edges — MANDO left, ADEL right */
   hero: {
-    groups: [
-      { text: "MAN", mins: [0.15] },
-      { text: "DO", mins: [0, 0.11] },
-      { text: "A", mins: [0.12] },
-      { text: "DEL", mins: [0, 0.09] },
+    words: [
+      {
+        groups: [
+          { text: "MAN", mins: [0.15] },
+          { text: "DO", mins: [0, 0.11] },
+        ],
+      },
+      {
+        groups: [
+          { text: "A", mins: [0.12] },
+          { text: "DEL", mins: [0, 0.09] },
+        ],
+      },
     ],
-    subtitle: ["2016", "Graphic Designer", "Brand Identity"],
+    subtitle: ["Started in 2025 | Brand Identity, Packaging, Print, Social Media & Sports Design"],
   },
 
   nav: [

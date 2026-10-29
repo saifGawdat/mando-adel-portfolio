@@ -29,9 +29,13 @@ export default function Hero({ site }: { site: SiteContent }) {
         className="h1 header-title"
         aria-label={`${site.firstName} ${site.lastName}`}
       >
-        {site.hero.groups.map((group) => (
-          <span className="group" key={group.text}>
-            <Letters text={group.text} mins={group.mins} />
+        {site.hero.words.map((word, wordIndex) => (
+          <span className="word" key={wordIndex}>
+            {word.groups.map((group) => (
+              <span className="group" key={group.text}>
+                <Letters text={group.text} mins={group.mins} />
+              </span>
+            ))}
           </span>
         ))}
       </h1>
