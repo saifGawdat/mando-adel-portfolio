@@ -1,5 +1,7 @@
 import type { SiteContent } from "@/content/site";
 
+
+
 export default function Nav({
   site,
   onContact,
@@ -7,6 +9,7 @@ export default function Nav({
   site: SiteContent;
   onContact: () => void;
 }) {
+  const MY_PHONE_NUMBER = '201095884923'
   return (
     <nav id="nav" aria-label="Primary">
       <a className="nav-name" href="#header">
@@ -28,7 +31,9 @@ export default function Nav({
 
       <div id="nav-right">
         <button type="button" className="nav-contact" onClick={onContact}>
-          Contact us
+          <a href={`https://wa.me/${MY_PHONE_NUMBER}`} target="_blank" className="nav-contact">
+            Contact us
+          </a>
         </button>
 
         <div className="items">

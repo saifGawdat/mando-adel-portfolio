@@ -16,6 +16,8 @@ import WorkSection from "./WorkSection";
 import type { SiteContent } from "@/content/site";
 import { runHeroIntro } from "@/lib/intro";
 import { playNoiseIn, prefersReducedMotion, setNoisePlaying } from "@/lib/noise";
+import { enterFromFor, enterWork, resetWork } from "@/lib/workEnter";
+import { enterAbout, resetAbout } from "@/lib/aboutEnter";
 
 const isMobile = () =>
   typeof window !== "undefined" && window.innerWidth <= 1024;
@@ -157,13 +159,23 @@ export default function Site({ site }: { site: SiteContent }) {
     );
     if (!sections.length) return;
 
-    let virtual = 0;
-    const total = sections.reduce((sum, section) => {
-      section.dataset.virtualIndex = String(virtual);
-      const steps = Number(section.dataset.steps || 1);
-      virtual += steps;
-      return sum + steps;
-    }, 0);
+    // on phones/tablets a section may collapse to fewer steps
+    // (e.g. work sections skip their title-only screen)
+    const stepsOf = (section: HTMLElement) =>
+      isMobile() && section.dataset.mobileSteps
+        ? Number(section.dataset.mobileSteps)
+        : Number(section.dataset.steps || 1);
+
+    let total = 0;
+    const measure = () => {
+      let virtual = 0;
+      for (const section of sections) {
+        section.dataset.virtualIndex = String(virtual);
+        virtual += stepsOf(section);
+      }
+      total = virtual;
+    };
+    measure();
 
     const bar = document.querySelector<HTMLElement>("#nav-mobile-bar span");
     const indexEl = document.getElementById("nav-mobile-index");
@@ -171,9 +183,16 @@ export default function Site({ site }: { site: SiteContent }) {
 
     let index = 0;
 
+    // phones/tablets: work sections play their entrance when they become active
+    const works = sections.filter((section) =>
+      section.classList.contains("work"),
+    );
+    let current: HTMLElement | null = null;
+    const aboutSection = sections.find((section) => section.id === "about");
+
     const apply = () => {
       for (const section of sections) {
-        const steps = Number(section.dataset.steps || 1);
+        const steps = stepsOf(section);
         const start = Number(section.dataset.virtualIndex);
         const active = index >= start && index < start + steps;
         section.classList.toggle("is-active", active);
@@ -185,6 +204,17 @@ export default function Site({ site }: { site: SiteContent }) {
       const active = sections.find((section) =>
         section.classList.contains("is-active"),
       );
+
+      if (active !== current) {
+        current = active ?? null;
+        if (active && isMobile()) {
+          if (works.includes(active)) {
+            enterWork(active, enterFromFor(works.indexOf(active)));
+          } else if (active === aboutSection) {
+            enterAbout(active);
+          }
+        }
+      }
 
       if (bar) {
         bar.style.transform = `scaleX(${total > 1 ? index / (total - 1) : 0})`;
@@ -235,7 +265,15 @@ export default function Site({ site }: { site: SiteContent }) {
     prev?.addEventListener("click", onPrev);
     next?.addEventListener("click", onNext);
 
-    const onResize = () => apply();
+    const onResize = () => {
+      measure();
+      index = Math.min(index, total - 1);
+      if (!isMobile()) {
+        works.forEach(resetWork);
+        if (aboutSection) resetAbout(aboutSection);
+      }
+      apply();
+    };
     window.addEventListener("resize", onResize);
 
     apply();

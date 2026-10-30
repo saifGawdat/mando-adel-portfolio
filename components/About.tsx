@@ -30,7 +30,6 @@ export default function About({ site }: { site: SiteContent }) {
       <figure className="about-card">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <picture>
-          <source media="(max-width: 767px)" srcSet={site.portraits.mobile} />
           <source media="(max-width: 1024px)" srcSet={site.portraits.tablet} />
           <img src={site.portraits.desktop} alt={site.portraitAlt} loading="lazy" />
         </picture>

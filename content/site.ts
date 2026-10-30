@@ -34,6 +34,8 @@ export const site = {
     desktop: "/img/portrait-desktop.jpg",
     tablet: "/img/portrait-tablet.jpg",
     mobile: "/img/portrait-mobile.jpg",
+    /** phone hero crop (<=767px) — the About card keeps using `mobile` */
+    heroMobile: "/img/portrait-hero-mobile.png",
   },
   portraitAlt: "Portrait of Mando Adel",
   // TODO: replace with his real address before launch.

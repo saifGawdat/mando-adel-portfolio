@@ -13,7 +13,7 @@ export default function Hero({ site }: { site: SiteContent }) {
       <div className="header-media">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <picture>
-          <source media="(max-width: 767px)" srcSet={site.portraits.mobile} />
+          <source media="(max-width: 767px)" srcSet={site.portraits.heroMobile} />
           <source media="(max-width: 1024px)" srcSet={site.portraits.tablet} />
           <img
             className="header-image"

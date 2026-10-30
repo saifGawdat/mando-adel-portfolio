@@ -1623,8 +1623,10 @@ html.lenis body {
   }
 
   .header-image {
+    height: 100%;
     filter: none;
-    object-position: 50% 22%;
+    object-position: 50% 30%;
+    transform: none;
   }
 
   .header-scrim {
@@ -1639,6 +1641,9 @@ html.lenis body {
   }
 
   .header-title {
+    top: auto;
+    bottom: 200px;
+    transform: translateX(-50%);
     justify-content: center;
     width: 100%;
     max-width: none;
@@ -1725,10 +1730,25 @@ html.lenis body {
     top: auto;
     left: auto;
     order: 2;
-    width: 100%;
-    max-width: min(230px, 30vh);
+    width: fit-content;
+    max-width: 100%;
+    aspect-ratio: auto;
     margin: 20px auto;
     transform: none;
+  }
+
+  /* show the whole portrait: the box takes the image's own proportions
+     instead of cropping it to a fixed ratio */
+  .about-card picture {
+    display: block;
+  }
+
+  .about-card img {
+    width: auto;
+    max-width: 100%;
+    height: min(40dvh, 340px);
+    object-fit: contain;
+    object-position: 50% 50%;
   }
 
   .about-left {
@@ -1837,6 +1857,23 @@ html.lenis body {
     margin-left: 0;
   }
 
+  /* the title is typed in by lib/workEnter.ts on phones/tablets, so the
+     desktop scroll-reveal must not hide or move its letters here */
+  .work .work-title .letter,
+  .work.is-in .work-title .letter {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* same for the About title: lib/aboutEnter.ts animates it on phones/tablets */
+  .about .about-title .letter,
+  .about.is-in .about-title .letter {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .work .work-caption {
     display: none;
   }
@@ -1850,16 +1887,9 @@ html.lenis body {
     max-width: min(400px, 40vh) !important;
     aspect-ratio: 341 / 428;
     margin: 0;
-    opacity: 0 !important;
-    transform: translate(-50%, -50%) scale(0.4) !important;
-    transition:
-      transform 1.6s var(--ease),
-      opacity 0.7s var(--ease-out);
-  }
-
-  .work[data-current-step="1"] .work-card {
     opacity: 1 !important;
-    transform: translate(-50%, -50%) scale(1) !important;
+    transform: translate(-50%, -50%) !important;
+    transition: none !important;
   }
 
   .work .work-right,
@@ -1880,16 +1910,9 @@ html.lenis body {
     gap: 1px;
     align-items: center;
     font-size: 11px;
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 0.6s var(--ease-out) 0.15s,
-      visibility 0s linear 0.15s;
-  }
-
-  .work[data-current-step="1"] .work-meta {
     opacity: 1;
     visibility: visible;
+    transition: none;
   }
 
   .work--panel .work-left .work-meta,
@@ -1906,15 +1929,16 @@ html.lenis body {
     display: none;
   }
 
-  .work[data-current-step="1"] .work-title {
+  .work .work-title {
     top: 50%;
     bottom: auto;
+    transition: none;
     transform: translateY(
       calc(-50% - min(400px, 40vh) * 0.6275 - 56px)
     );
   }
 
-  .work[data-current-step="1"] .work-media {
+  .work .work-media {
     opacity: 0;
     transform: translateY(-100%);
   }

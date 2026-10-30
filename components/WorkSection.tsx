@@ -80,6 +80,7 @@ export default function WorkSection({
       className={`work work--${work.layout}`}
       data-step-section
       data-steps="2"
+      data-mobile-steps="1"
       data-label={work.title}
       data-reveal-section
       aria-labelledby={`${work.slug}-title`}
